@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Track_Time.Models
 {
     public class TrackTime
@@ -16,5 +18,11 @@ namespace Track_Time.Models
 
         public int RoleId { get; set; }
         public Role Role { get; set; }
+
+        public DateTime DateEvent { get; set; }
+
+        public TimeSpan WorkingHours { get; set; }
+
+
     }
 }

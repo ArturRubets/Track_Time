@@ -3,6 +3,8 @@ namespace Track_Time.Models
 {
     public class TrackTime
     {
+        public int Id { get; set; }
+
         public int ActivityTypeId { get; set; }
         public ActivityType ActivityType { get; set; }
 

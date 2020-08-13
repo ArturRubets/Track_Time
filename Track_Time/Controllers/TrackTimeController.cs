@@ -27,6 +27,12 @@ namespace Track_Time.Controllers
             if (trackTimes.Count == 0)
                 return NotFound();
 
+           
+            return new ObjectResult(CreateResultRow(trackTimes));
+        }
+
+        private string CreateResultRow(List<TrackTime> trackTimes)
+        {
             StringBuilder stringBuilder = new StringBuilder();
 
             bool flag = true;
@@ -48,9 +54,8 @@ namespace Track_Time.Controllers
                     stringBuilder.Append(track.Project.Name + " ");
                     stringBuilder.Append(track.ActivityType.Name);
                 }
-
             }
-            return new ObjectResult(stringBuilder.ToString());
+            return stringBuilder.ToString();
         }
         private DateTime GetBeginDateOfWeek(int weekNumber)
         {
@@ -58,7 +63,8 @@ namespace Track_Time.Controllers
             while (firstDay.DayOfWeek != DayOfWeek.Thursday) firstDay = firstDay.AddDays(1); //ближайший четверг первая неделя года, стандарт в Европе
             return firstDay.AddDays(7 * (weekNumber - 1) - 3);
         }
-        [HttpGet("NumberOfWeek/{personId}/{numberOfWeek}")]
+        
+        [HttpGet("{personId}/NumberOfWeek/{numberOfWeek}")]
         public async Task<ActionResult<TrackTime>> GetTrackTimesByNumberWeek(int personId, int numberOfWeek )
         {
             DateTime firstDayOfWeek = GetBeginDateOfWeek(numberOfWeek);
@@ -74,30 +80,7 @@ namespace Track_Time.Controllers
             if (trackTimes.Count == 0)
                 return NotFound();
 
-            StringBuilder stringBuilder = new StringBuilder();
-
-            bool flag = true;
-            foreach (var track in trackTimes)
-            {
-                if (flag)
-                {
-                    stringBuilder.Append(track.DateEvent.Date.ToString("d") + " as a ");
-                    stringBuilder.Append(track.Role.Name + " I worked on the ");
-                    stringBuilder.Append(track.Project.Name + " ");
-                    stringBuilder.Append(track.WorkingHours.Hours + " hours ");
-                    stringBuilder.Append(track.ActivityType.Name);
-                    flag = false;
-                }
-                else
-                {
-                    stringBuilder.Append(" and " + track.WorkingHours.Hours + " hours as a ");
-                    stringBuilder.Append(track.Role.Name + " on the ");
-                    stringBuilder.Append(track.Project.Name + " ");
-                    stringBuilder.Append(track.ActivityType.Name);
-                }
-
-            }
-            return new ObjectResult(stringBuilder.ToString());
+            return new ObjectResult(CreateResultRow(trackTimes));
         }
     }
 }
